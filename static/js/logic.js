@@ -5,7 +5,7 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 d3.json(queryUrl, function(data) {
     console.log(data.features);
     
-    // Make function to specify color
+    // Make function to specify color based on earthquake depth
     function getColor(depth) {
       switch(true) {
         case depth > 100:
@@ -33,7 +33,7 @@ function createFeatures(earthquakeData) {
         layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
     }
 
-    // Circles with dynamic magnitude
+    // Circles with dynamic magnitude and color by earthquake depth
     var earthquakes = L.geoJSON(earthquakeData, {
       pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {
