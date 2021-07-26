@@ -4,24 +4,54 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
     console.log(data.features);
+    
+    // Make function to specify color
+    function getColor(depth) {
+      switch(true) {
+        case depth > 100:
+          return "#FF0D0D";
+        case depth > 75:
+          return "#FF4E11";
+        case depth > 50:
+          return "#FF8E15";
+        case depth > 25:
+          return "#FAB733";
+        case depth > 10:
+          return "#ACB334";
+        default:
+          return "#69B34C" 
+      }
+    }
     createFeatures(data.features);
-});
+
 
 // Make function to store locations of earthquakes
 function createFeatures(earthquakeData) {
 
+  // Pop up information
     function onEachFeature(feature, layer) {
         layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
     }
 
+    // Circles with dynamic magnitude
     var earthquakes = L.geoJSON(earthquakeData, {
-        onEachFeature: onEachFeature
+      pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {
+          radius:feature.properties.mag * 7,
+          fillOpacity: 0.5,
+          color: getColor(feature.geometry.coordinates[2])
+        })
+      },
+      onEachFeature: onEachFeature
     });
 
     createMap(earthquakes);
 
 }
 
+});
+
+// Make maps
 function createMap(earthquakes) {
     // Add base layers
     var satellite = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -53,7 +83,7 @@ function createMap(earthquakes) {
         "Earthquakes": earthquakes
      };
 
-      var myMap = L.map("mapid", {
+      var myMap = L.map("map", {
         center: [
           37.09, -95.71
         ],
