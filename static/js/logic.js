@@ -90,13 +90,38 @@ function createMap(earthquakes) {
         zoom: 5,
         layers: [satellite, streetmap, earthquakes]
       });
-
+      
+      
+    
        // Create a layer control
   // Pass in our baseMaps and overlayMaps
   // Add the layer control to the map
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
-}
+
+  var legend = L.control({
+    position: "bottomright"
+  });
+
+  legend.onAdd = function (map) {
+    var div = L.DomUtil.create("div", "info legend");
+        labels= ['<strong>Earthquake Depths(ft)</strong>'],
+        categories = ['<10', '10-25', '25-50', '50-75', '75-100', '>100'];
 
 
+    var colors = ["#69B34C", "#ACB334", "#FAB733", "#FF8E15", "#FF4E11", "#FF0D0D"];
+        
+
+    for (var i = 0; i<categories.length; i++) {
+        div.innerHTML +=
+        labels.push(
+            '<i class="circle" style="background:' + colors[i] + '"></i> ' +
+            (categories[i] ? categories[i] : '+'));
+        }
+        div.innerHTML = labels.join('<br>');
+        return div;
+        };
+        
+      legend.addTo(myMap)
+    }
