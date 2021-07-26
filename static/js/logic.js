@@ -30,7 +30,7 @@ function createFeatures(earthquakeData) {
 
   // Pop up information
     function onEachFeature(feature, layer) {
-        layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+        layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>" + "<hr><p>" + "Mag: " + feature.properties.mag + " Depth: " + feature.geometry.coordinates[2] + "</p>");
     }
 
     // Circles with dynamic magnitude and color by earthquake depth
